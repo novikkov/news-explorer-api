@@ -1,0 +1,42 @@
+{
+  "name": "news-explorer-api",
+  "version": "1.0.0",
+  "description": "backend diploma",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon app.js",
+    "start": "NODE_ENV=production node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/novikkov/news-explorer-api.git"
+  },
+  "author": "novikov",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/novikkov/news-explorer-api/issues"
+  },
+  "homepage": "https://github.com/novikkov/news-explorer-api#readme",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.19.0",
+    "celebrate": "^12.1.1",
+    "dotenv": "^8.2.0",
+    "escape-html": "^1.0.3",
+    "express": "^4.17.1",
+    "express-rate-limit": "^5.1.3",
+    "express-winston": "^4.0.3",
+    "helmet": "^3.22.0",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.9.18",
+    "validator": "^13.0.0",
+    "winston": "^3.2.1"
+  },
+  "devDependencies": {
+    "eslint": "^7.2.0",
+    "eslint-config-airbnb-base": "^14.1.0",
+    "eslint-plugin-import": "^2.20.2",
+    "nodemon": "^2.0.4"
+  }
+}
