@@ -30,7 +30,7 @@ module.exports.createArticle = (req, res, next) => {
 };
 
 module.exports.deleteArticle = (req, res, next) => {
-  Article.findById(req.params.articleId)
+  Article.findById(req.params.articleId).select('+owner')
     .orFail(() => new NotFoundError('Статья не найдена'))
     .then((article) => {
       if (!article.owner.equals(req.user._id)) {
@@ -44,15 +44,8 @@ module.exports.deleteArticle = (req, res, next) => {
 };
 
 module.exports.getSaveArticles = (req, res, next) => {
-  Article.findById(req.params.cardId)
-    .orFail(() => new NotFoundError('Статьи не найдены'))
-    .then((article) => {
-      if (!article.owner.equals(req.user._id)) {
-        throw new PermissionError('Нет прав на просмотр статей');
-      }
-
-      return Article.find(article)
-        .then(() => res.send({ data: article }));
-    })
+  Article.find().select('+owner')
+    .orFail(new NotFoundError('Пользователя не существует'))
+    .then((acticle) => res.send({ data: acticle }))
     .catch(next);
 };
