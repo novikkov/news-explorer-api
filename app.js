@@ -3,15 +3,13 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const helmet = require('helmet');
-const { celebrate, Joi } = require('celebrate');
 const { errors } = require('celebrate');
 
 const router = require('./routes');
 const { limiter } = require('./security/rateLimiter');
-const { auth } = require('./middlewares/auth');
-const { login, createUser } = require('./controllers/users');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const { PORT, SERVER_CONNECT } = require('./config');
+const { centrError } = require('./errors/centr-error');
 const NotFoundError = require('./errors/not-found-err');
 
 const app = express();
@@ -30,45 +28,17 @@ mongoose.connect(SERVER_CONNECT, {
 
 app.use(requestLogger);
 
-app.post('/signup', celebrate({
-  body: Joi.object().keys({
-    name: Joi.string().required().min(2).max(30),
-    email: Joi.string().required().email(),
-    password: Joi.string().required().min(8),
-  }),
-}), createUser);
-app.post('/signin', celebrate({
-  body: Joi.object().keys({
-    email: Joi.string().required().email(),
-    password: Joi.string().required().min(8),
-  }),
-}), login);
-
-app.use(auth);
-
 app.use('/', router);
-
-app.use(errorLogger);
-
-app.use(errors());
 
 app.use('/', (req, res, next) => {
   next(new NotFoundError('Запрашиваемый ресурс не найден'));
 });
 
-app.use((err, req, res, next) => {
-  const { statusCode = 500, message } = err;
+app.use(errorLogger);
 
-  res
-    .status(statusCode)
-    .send({
-      message: statusCode === 500
-        ? 'На сервере произошла ошибка'
-        : message,
-    });
+app.use(errors());
 
-  next();
-});
+app.use(centrError);
 
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`);
