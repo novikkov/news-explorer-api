@@ -10,7 +10,6 @@ const { limiter } = require('./security/rateLimiter');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const { PORT, SERVER_CONNECT } = require('./config');
 const { centrError } = require('./errors/centr-error');
-const NotFoundError = require('./errors/not-found-err');
 
 const app = express();
 
@@ -29,10 +28,6 @@ mongoose.connect(SERVER_CONNECT, {
 app.use(requestLogger);
 
 app.use('/', router);
-
-app.use('/', (req, res, next) => {
-  next(new NotFoundError('Запрашиваемый ресурс не найден'));
-});
 
 app.use(errorLogger);
 
