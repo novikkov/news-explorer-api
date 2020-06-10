@@ -3,7 +3,6 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const { JWT_SECRET_KEY } = require('../config');
 const NotFoundError = require('../errors/not-found-err');
-const ConflictError = require('../errors/conflict-err');
 
 module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
